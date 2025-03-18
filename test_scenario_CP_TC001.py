@@ -6,6 +6,7 @@ import pytest
 import time
 import os
 import logging
+import random
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as ws
@@ -24,10 +25,12 @@ def test_scenario_001(driver: WebDriver):
     wait = ws(driver, 10)
     product_list = "productList"
 
+    # 기본 설정
+    wait_time = random.randint(1, 3)
+
     text_to_type = "노"
     text_to_type_two = "트"
     text_to_type_three = "북"
-
     text_list = [text_to_type, text_to_type_two, text_to_type_three]
 
     # 로그 저장할 폴더 생성
@@ -69,7 +72,7 @@ def test_scenario_001(driver: WebDriver):
 
     # 메인페이지 진입
     main_page.open()
-    time.sleep(2)
+    time.sleep(wait_time)
 
     wait.until(EC.url_contains("coupang.com"))
     assert "coupang.com" in driver.current_url
@@ -83,7 +86,7 @@ def test_scenario_001(driver: WebDriver):
         for i in text_list:
             for char in i:
                 main_page.search_text_input(char)
-                time.sleep(0.3)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
+                time.sleep(0.1)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
         main_page.search_text_enter()
 
         wait.until(EC.presence_of_element_located((By.ID, product_list)))
@@ -111,9 +114,9 @@ def test_scenario_001(driver: WebDriver):
         logger.error("로그인전 노트북 검색 실패 예외")
         assert False
     
-    time.sleep(2)
+    time.sleep(wait_time)
     driver.back()
-    time.sleep(2)
+    time.sleep(wait_time)
 
 
     # Step 2
@@ -121,7 +124,7 @@ def test_scenario_001(driver: WebDriver):
     try:
         # 로그인 페이지 진입
         login_page.open_login()
-        time.sleep(2)
+        time.sleep(wait_time)
 
         wait.until(EC.url_contains("login"))
         assert "login" in driver.current_url
@@ -131,10 +134,10 @@ def test_scenario_001(driver: WebDriver):
         # 로그인 진행
         login_page.input_email(EMAIL)
         login_page.input_password(PASSWORD)
-        time.sleep(1)
+        time.sleep(wait_time)
         login_page.click_login_button()
 
-        time.sleep(2)
+        time.sleep(wait_time)
 
         login_check = login_page.is_logged_in()
         assert NAME in login_check
@@ -148,13 +151,13 @@ def test_scenario_001(driver: WebDriver):
         assert len(cookies) > 0
         logger.info("쿠키가 정상적으로 저장되었습니다.")
 
-        time.sleep(2)
+        time.sleep(wait_time)
 
         # "노트북" 검색
         for i in text_list:
             for char in i:
                 main_page.search_text_input(char)
-                time.sleep(0.3)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
+                time.sleep(0.1)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
         main_page.search_text_enter()
         
         wait.until(EC.presence_of_element_located((By.ID, product_list)))
@@ -183,7 +186,7 @@ def test_scenario_001(driver: WebDriver):
         assert False
     
 
-    time.sleep(2)
+    time.sleep(wait_time)
 
 
     # Step 3
@@ -202,7 +205,7 @@ def test_scenario_001(driver: WebDriver):
         assert False
 
 
-    time.sleep(3)
+    time.sleep(wait_time)
 
 
     # 로그아웃 진행
