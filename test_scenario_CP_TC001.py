@@ -118,25 +118,31 @@ def test_scenario_001(driver: WebDriver):
         logger.info("로그인페이지 진입 성공")
 
         # 로그인 진행
-        login_page.input_email(EMAIL)
-        login_page.input_password(PASSWORD)
-        time.sleep(1)
-        login_page.click_login_button()
+        login_page.load_cookies()  # 쿠키 불러오기 (있으면 자동 로그인)
+        login_page.driver.refresh()  # 페이지 새로고침 후 자동 로그인 상태 확인
 
-        time.sleep(2)
-
-        login_check = login_page.is_logged_in()
+        login_check = login_page.is_logged_in() # 로그인 확인
         assert NAME in login_check
-        driver.save_screenshot(pass_img_path + tc_name + "로그인후-수동-로그인-성공.jpg")
-        logger.info("수동 로그인 성공")
+        driver.save_screenshot(pass_img_path + tc_name + "로그인후-자동-로그인-성공.jpg")
+        logger.info("자동 로그인 성공")
 
-        login_page.save_cookies()  # 로그인 후 쿠키 저장
+        # 쿠키 자동 로그인 실패 시 수동 로그인 진행
+        if not login_check():
+            logger.info("자동 로그인 실패, 수동 로그인 진행")
 
-        # 쿠키 저장된 것 확인
-        cookies = driver.get_cookies()
-        assert len(cookies) > 0
-        logger.info("쿠키가 정상적으로 저장되었습니다.")
+            login_page.input_email(EMAIL)
+            login_page.input_password(PASSWORD)
+            time.sleep(1)
+            login_page.click_login_button()
 
+            time.sleep(2)
+
+            assert NAME in login_check
+            driver.save_screenshot(pass_img_path + tc_name + "로그인후-수동-로그인-성공.jpg")
+            logger.info("수동 로그인 성공")
+
+            login_page.save_cookies()  # 로그인 후 쿠키 저장
+        
         time.sleep(2)
 
         # "노트북" 검색
