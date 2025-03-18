@@ -28,11 +28,6 @@ def test_scenario_001(driver: WebDriver):
     # 기본 설정
     wait_time = random.randint(1, 3)
 
-    text_to_type = "노"
-    text_to_type_two = "트"
-    text_to_type_three = "북"
-    text_list = [text_to_type, text_to_type_two, text_to_type_three]
-
     # 로그 저장할 폴더 생성
     log_dir = "logs"
     os.makedirs(log_dir, exist_ok=True) # 폴더가 없으면 생성
@@ -83,11 +78,7 @@ def test_scenario_001(driver: WebDriver):
     # 쿠팡 로그인 전 "노트북" 검색
     try:
         # "노트북" 검색
-        for i in text_list:
-            for char in i:
-                main_page.search_text_input(char)
-                time.sleep(0.1)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
-        main_page.search_text_enter()
+        main_page.search_items("노트북")
 
         wait.until(EC.presence_of_element_located((By.ID, product_list)))
 
@@ -140,7 +131,7 @@ def test_scenario_001(driver: WebDriver):
         time.sleep(wait_time)
 
         login_check = login_page.is_logged_in()
-        assert NAME in login_check
+        assert NAME in login_check.text
         driver.save_screenshot(pass_img_path + tc_name + "로그인후-수동-로그인-성공.jpg")
         logger.info("수동 로그인 성공")
 
@@ -154,11 +145,7 @@ def test_scenario_001(driver: WebDriver):
         time.sleep(wait_time)
 
         # "노트북" 검색
-        for i in text_list:
-            for char in i:
-                main_page.search_text_input(char)
-                time.sleep(0.1)  # 0.2초(200ms) 정도 대기 (원하는 만큼 조절)
-        main_page.search_text_enter()
+        main_page.search_items("노트북")
         
         wait.until(EC.presence_of_element_located((By.ID, product_list)))
 
