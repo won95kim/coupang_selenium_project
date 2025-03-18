@@ -75,6 +75,3 @@ class LoginPage:
     # 로그인 상태 확인
     def is_logged_in(self):
         return self.driver.find_element(By.CSS_SELECTOR, self.my_coupang)  # 로그인 후 사용되는 요소
-        
-    
-    # 확인용
